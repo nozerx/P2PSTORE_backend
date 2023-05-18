@@ -7,11 +7,13 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 	"time"
 
 	host "github.com/libp2p/go-libp2p/core/host"
 	"github.com/libp2p/go-libp2p/core/peer"
 
+	"p2pstore/filehandling"
 	"p2pstore/group"
 )
 
@@ -27,7 +29,7 @@ func HandleInputFromSDI(ctx context.Context, host host.Host, gr *group.GroupRoom
 			}
 			if input[:5] == "<cmd>" {
 				fmt.Println("These are the available commands")
-				fmt.Println("1.Change Group\n2.Change UserName\n3.List Group Peers\n4.List service peers\n5.Join Group\n7.Print PEER-TABLE")
+				fmt.Println("1.Change Group\n2.Change UserName\n3.List Group Peers\n4.List service peers\n5.Join Group\n7.Print PEER-TABLE\n8.Send File\n9.Recieve File")
 				var choice int
 				fmt.Scanln(&choice)
 				switch choice {
@@ -172,6 +174,44 @@ func HandleInputFromSDI(ctx context.Context, host host.Host, gr *group.GroupRoom
 					fmt.Println("************ACTIVEPEERTABLE*****************")
 					group.PrintPeerTable()
 					break
+				case 8:
+					fmt.Println("************FILE SEND DIALOG****************")
+					fmt.Println("Enter the name of the file")
+					input, err := reader.ReadString('\n')
+					escapeSeqLen := 0
+					if runtime.GOOS == "windows" {
+						escapeSeqLen = 2
+					} else {
+						escapeSeqLen = 1
+					}
+					fileName := input[:len(input)-escapeSeqLen]
+					fileType := strings.Split(fileName, ".")[1]
+					fmt.Println(" FILE: [", fileName, "] of file type : [", fileType, "]")
+					file, err := filehandling.CreatNewFileObject(fileName, fileType, host)
+					if err != nil {
+						fmt.Println("[ERROR] - File Send aborted due to error in processing the request")
+						break
+					} else {
+						fmt.Println("File send operation completed till now ", "file size is", file.FileSize)
+						group.Peerlist = nil
+						for id, peer := range gr.PeerList() {
+							group.Peerlist = append(group.Peerlist, group.ServicePeer{Id: id, PeerId: peer})
+						}
+						for _, servicepeer := range group.Peerlist {
+							fmt.Println(servicepeer)
+						}
+						var choice int
+						fmt.Scanln(&choice)
+						var remotePeer peer.ID
+						for _, servicepeer := range group.Peerlist {
+							if choice == servicepeer.Id {
+								remotePeer = servicepeer.PeerId
+								break
+							}
+						}
+						file.SendMeta(ctx, host, remotePeer)
+					}
+
 				default:
 					fmt.Println("Bad command")
 

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"p2pstore/core"
+	"p2pstore/filehandling"
 	"p2pstore/group"
 	nodehost "p2pstore/host"
 	initnode "p2pstore/init"
@@ -29,6 +30,8 @@ func main() {
 
 	// The following code calls the function EstablishP2PNode() to kickstart the node.
 	ctx, host, err := p2p.EstablishP2PNode()
+	filehandling.NodeHostCtx.Host = host
+	filehandling.NodeHostCtx.Ctx = ctx
 	if err != nil {
 		// In casee of any errors while starting the node, node has to shutdown.
 		fmt.Println("[ERROR] - while initializing the node")
@@ -37,6 +40,8 @@ func main() {
 	}
 	host.SetStreamHandler(protocol.ID(group.GroupJoinRequestProtocol), group.HandleStreamJoinRequest)
 	host.SetStreamHandler(protocol.ID(group.GroupJoinReplyProtocol), group.RecieveReply)
+	host.SetStreamHandler(protocol.ID(filehandling.FileShareProtocol), filehandling.HandleStreamFileShare)
+	host.SetStreamHandler(protocol.ID(filehandling.FileShareMetaDataProtocol), filehandling.HandleStreamFileShareMetaIncomming)
 	kadDHT := p2p.HandleDHT(ctx, host)
 	pubSub := initnode.SetUpPubSub(ctx, host)
 	nodeHost := nodehost.NewP2P(ctx, host, kadDHT, pubSub)
