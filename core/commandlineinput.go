@@ -29,7 +29,7 @@ func HandleInputFromSDI(ctx context.Context, host host.Host, gr *group.GroupRoom
 			}
 			if input[:5] == "<cmd>" {
 				fmt.Println("These are the available commands")
-				fmt.Println("1.Change Group\n2.Change UserName\n3.List Group Peers\n4.List service peers\n5.Join Group\n7.Print PEER-TABLE\n8.Send File\n9.Recieve File")
+				fmt.Println("1.Change Group\n2.Change UserName\n3.List Group Peers\n4.List service peers\n5.Join Group\n7.Print PEER-TABLE\n8.Send File\n9.File Services")
 				var choice int
 				fmt.Scanln(&choice)
 				switch choice {
@@ -211,7 +211,10 @@ func HandleInputFromSDI(ctx context.Context, host host.Host, gr *group.GroupRoom
 						}
 						file.SendMeta(ctx, host, remotePeer)
 					}
-
+					break
+				case 9:
+					fileServiceMenu(reader)
+					break
 				default:
 					fmt.Println("Bad command")
 
