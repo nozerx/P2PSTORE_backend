@@ -18,11 +18,12 @@ const rootFolder folderName = "core"
 const Nodeinfofolder folderName = "core/nodeinfo"
 const Mapfilefolder folderName = "core/mapfiles"
 const Piecefolder folderName = "core/piecefolders"
+const UploadedPiecesFolder folderName = "core/uploaded"
 const Sendfolder folderName = "core/send"
 const Recievefolder folderName = "core/recieve"
 
 // this list makes it easier to cycle through the file names and handle any errors encountered while creating them
-var initfoldernames []folderName = []folderName{rootFolder, Nodeinfofolder, Mapfilefolder, Piecefolder, Sendfolder, Recievefolder}
+var initfoldernames []folderName = []folderName{rootFolder, Nodeinfofolder, Mapfilefolder, Piecefolder, UploadedPiecesFolder, Sendfolder, Recievefolder}
 
 // This function handles creation of any new folders
 func (fn folderName) MakeFolder() error {

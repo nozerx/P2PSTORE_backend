@@ -16,6 +16,9 @@ type PieceInfo struct {
 	PieceType string
 	PieceSize int
 	Sources   []peer.ID
+	FileName  string
+	FileType  string
+	UniqueID  uuid.UUID
 }
 
 type FileInfo struct {
@@ -32,11 +35,17 @@ type PickDistributionList struct {
 	Count int
 }
 
+type DynamicFilePieceHandleProtocol struct {
+	protocolName string
+	count        int
+}
+
 //constants
 
 const rootFolder FolderName = "core"
 const mapfilefolder FolderName = "core/mapfiles"
 const piecefolder FolderName = "core/piecefolders"
+const uploadedPiecesFolder FolderName = "core/uploaded"
 const sendfolder FolderName = "core/send"
 const recievefolder FolderName = "core/recieve"
 
@@ -49,4 +58,4 @@ var NodeHostCtx struct {
 	Ctx  context.Context
 }
 
-// var buff []byte
+var ManageProtocolList []DynamicFilePieceHandleProtocol

@@ -1,9 +1,11 @@
 package core
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 
 	"github.com/libp2p/go-libp2p/core/network"
 	"github.com/libp2p/go-libp2p/core/peer"
@@ -36,12 +38,45 @@ func HandleStreamPieceUpload(str network.Stream) {
 }
 
 func (p PieceInfo) RecievePiece(remotePeer peer.ID) {
-	protocolName := "pieceDownloadProtocol/" + p.PieceName + "/" + p.PieceType
+	protocolName := "pieceDownloadProtocol/" + p.FileName + "/" + p.FileType + "/" + p.UniqueID.String() + "/" + p.PieceName + "/" + fmt.Sprint(p.PieceSize)
 	str, err := NodeHostCtx.Host.NewStream(NodeHostCtx.Ctx, remotePeer, protocol.ID(protocolName))
 	if err != nil {
 		fmt.Println("[ERROR] - during creating a new stream to protocol [" + protocolName + "]")
 	} else {
 		fmt.Println("[SUCCESS] - in establishing a stream to protocol [" + protocolName + "]")
+		folderName := FolderName(string(uploadedPiecesFolder) + "/" + fmt.Sprint(p.FileName, "_", p.FileType, "_"+p.UniqueID.String()))
+		err = folderName.MakeFolder()
+		if err != nil {
+			fmt.Println("[ERROR] - during creation of folder [" + folderName + "]")
+			fmt.Println("[ERROR INFO] - ", err.Error())
+			return
+		} else {
+			fmt.Println("Trying to recieve the piece [" + p.FileName + "/" + p.PieceName + "]")
+			file, err := os.Create(string(folderName) + "/" + p.PieceName)
+			buffer := make([]byte, 1)
+			reader := bufio.NewReader(str)
+			if err != nil {
+				fmt.Println("[ERROR] - during creation of recieving file [" + p.PieceName + "]")
+			} else {
+				for {
+					_, err := reader.Read(buffer)
+					if err != nil {
+						if err == io.EOF {
+							fmt.Println("Fully Recieved")
+							break
+						}
+						fmt.Println("[ERROR] - during reading from the input stream")
+						fmt.Println(err.Error())
+						fmt.Println("[ABORT] - handling join request from " + str.Conn().RemotePeer())
+						return
+					}
+					file.Write(buffer)
+
+				}
+				fmt.Println("[SUCCESS] - piece [" + p.FileName + "/" + p.PieceName + "] fully recieved")
+				file.Close()
+			}
+		}
 		str.Close()
 	}
 }
