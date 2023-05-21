@@ -12,13 +12,13 @@ type FolderName string
 type FileName string
 
 type PieceInfo struct {
-	PieceName string
-	PieceType string
-	PieceSize int
-	Sources   []peer.ID
-	FileName  string
-	FileType  string
-	UniqueID  uuid.UUID
+	PieceName      string
+	PieceType      string
+	PieceSize      int
+	Sources        []peer.ID
+	ParentFileName string
+	ParentFileType string
+	ParentUniqueID uuid.UUID
 }
 
 type FileInfo struct {
@@ -38,6 +38,12 @@ type PickDistributionList struct {
 type DynamicFilePieceHandleProtocol struct {
 	protocolName string
 	count        int
+}
+
+type FileBasicInfo struct {
+	FileName string
+	FileType string
+	UniqueID uuid.UUID
 }
 
 //constants

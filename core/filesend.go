@@ -40,7 +40,7 @@ func (p PieceInfo) SendPiece(fl FileInfo) {
 		fmt.Println("[ERROR] - during marshalling piece [", p.PieceName, "]")
 	}
 	go p.NotifyAllSources(pieceBytes)
-	pieceProtocol := "pieceDownloadProtocol/" + p.FileName + "/" + p.FileType + "/" + p.UniqueID.String() + "/" + p.PieceName + "/" + fmt.Sprint(p.PieceSize)
+	pieceProtocol := "pieceDownloadProtocol/" + p.ParentFileName + "/" + p.ParentFileType + "/" + p.ParentUniqueID.String() + "/" + p.PieceName + "/" + fmt.Sprint(p.PieceSize)
 	// pieceProtocol := "pieceDownloadProtocol/" + p.PieceName + "/" + p.PieceType
 	NodeHostCtx.Host.SetStreamHandler(protocol.ID(pieceProtocol), HandleStreamPieceDataUpload)
 	ManageProtocolList = append(ManageProtocolList, DynamicFilePieceHandleProtocol{

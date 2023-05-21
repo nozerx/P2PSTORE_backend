@@ -38,20 +38,20 @@ func HandleStreamPieceUpload(str network.Stream) {
 }
 
 func (p PieceInfo) RecievePiece(remotePeer peer.ID) {
-	protocolName := "pieceDownloadProtocol/" + p.FileName + "/" + p.FileType + "/" + p.UniqueID.String() + "/" + p.PieceName + "/" + fmt.Sprint(p.PieceSize)
+	protocolName := "pieceDownloadProtocol/" + p.ParentFileName + "/" + p.ParentFileType + "/" + p.ParentUniqueID.String() + "/" + p.PieceName + "/" + fmt.Sprint(p.PieceSize)
 	str, err := NodeHostCtx.Host.NewStream(NodeHostCtx.Ctx, remotePeer, protocol.ID(protocolName))
 	if err != nil {
 		fmt.Println("[ERROR] - during creating a new stream to protocol [" + protocolName + "]")
 	} else {
 		fmt.Println("[SUCCESS] - in establishing a stream to protocol [" + protocolName + "]")
-		folderName := FolderName(string(uploadedPiecesFolder) + "/" + fmt.Sprint(p.FileName, "_", p.FileType, "_"+p.UniqueID.String()))
+		folderName := FolderName(string(uploadedPiecesFolder) + "/" + fmt.Sprint(p.ParentFileName, "_", p.ParentFileType, "_"+p.ParentUniqueID.String()))
 		err = folderName.MakeFolder()
 		if err != nil {
 			fmt.Println("[ERROR] - during creation of folder [" + folderName + "]")
 			fmt.Println("[ERROR INFO] - ", err.Error())
 			return
 		} else {
-			fmt.Println("Trying to recieve the piece [" + p.FileName + "/" + p.PieceName + "]")
+			fmt.Println("Trying to recieve the piece [" + p.ParentFileName + "/" + p.PieceName + "]")
 			file, err := os.Create(string(folderName) + "/" + p.PieceName)
 			buffer := make([]byte, 1)
 			reader := bufio.NewReader(str)
@@ -73,7 +73,7 @@ func (p PieceInfo) RecievePiece(remotePeer peer.ID) {
 					file.Write(buffer)
 
 				}
-				fmt.Println("[SUCCESS] - piece [" + p.FileName + "/" + p.PieceName + "] fully recieved")
+				fmt.Println("[SUCCESS] - piece [" + p.ParentFileName + "/" + p.PieceName + "] fully recieved")
 				file.Close()
 			}
 		}

@@ -72,12 +72,12 @@ func ComposeFileInfo(fileName string, fileType string) *FileInfo {
 
 func ComposePieceInfo(pieceName string, pieceSize int, fileName string, fileType string, uniqueId uuid.UUID) *PieceInfo {
 	return &PieceInfo{
-		PieceName: pieceName,
-		PieceSize: pieceSize,
-		Sources:   nil,
-		FileName:  fileName,
-		FileType:  fileType,
-		UniqueID:  uniqueId,
+		PieceName:      pieceName,
+		PieceSize:      pieceSize,
+		Sources:        nil,
+		ParentFileName: fileName,
+		ParentFileType: fileType,
+		ParentUniqueID: uniqueId,
 	}
 }
 
