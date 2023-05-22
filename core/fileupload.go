@@ -109,10 +109,10 @@ func SendPiece(str network.Stream, path string, size int, fileName string, piece
 		reader.Read(buffer)
 		_, err = str.Write(buffer)
 		if err != nil {
-			fmt.Println("[ERROR] - during sending the piece to RemotePeer [" + str.Conn().RemotePeer().String() + "]")
+			fmt.Println("[ERROR][FILESEND] - during sending the piece to RemotePeer [" + str.Conn().RemotePeer().String() + "]")
 			return
 		} else {
-			fmt.Println("[SUCCESS] - in sending the piece [" + path + "] to peer [" + str.Conn().RemotePeer().String() + "]")
+			fmt.Println("[SUCCESS][FILESEND] - in sending the piece [" + path + "] to peer [" + str.Conn().RemotePeer().String() + "]")
 			SetPieceUploadStatus(fileName, pieceName)
 			str.Close()
 		}
@@ -157,7 +157,7 @@ func EnqueueUpload(fileHandle *FileUploadHandle) []*FileUploadHandle {
 }
 
 func CheckUploadStatus(file *FileInfo) {
-	fmt.Println("[INFO] - fileUpload Handler for [" + file.FileName + "." + file.FileType + "] started")
+	fmt.Println("[INFO][HANDLER] - fileUpload Handler for [" + file.FileName + "." + file.FileType + "] started")
 	var fh *FileUploadHandle
 	for _, fileHandle := range UploadQueue {
 		if fileHandle.File.FileName == file.FileName {
@@ -174,8 +174,8 @@ func CheckUploadStatus(file *FileInfo) {
 			}
 		}
 		if fullyUploaded == true {
-			fmt.Println("[INFO] - all pieces of file [" + file.FileName + "." + file.FileType + "] uploaded")
-			fmt.Println("[INFO] - fileUpload Handler for [" + file.FileName + "." + file.FileType + "] ended")
+			fmt.Println("[SUCCESS][FILEUPLOAD] - all pieces of file [" + file.FileName + "." + file.FileType + "] uploaded")
+			fmt.Println("[INFO][HANDLER] - fileUpload Handler for [" + file.FileName + "." + file.FileType + "] ended")
 			UpdateUploadStatus(*file)
 			return
 		}
