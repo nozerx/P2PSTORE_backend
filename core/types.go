@@ -16,6 +16,7 @@ type PieceInfo struct {
 	PieceType      string
 	PieceSize      int
 	Sources        []peer.ID
+	Status         []bool
 	ParentFileName string
 	ParentFileType string
 	ParentUniqueID uuid.UUID
@@ -55,6 +56,16 @@ type FileDownloadHanlde struct {
 	Stats []*downloadStat
 }
 
+type uploadStat struct {
+	pieceName    string
+	uploadStatus bool
+}
+
+type FileUploadHandle struct {
+	File FileInfo
+	Stat []*uploadStat
+}
+
 //constants
 
 const rootFolder FolderName = "core"
@@ -78,3 +89,4 @@ var NodeHostCtx struct {
 var ManageProtocolList []DynamicFilePieceHandleProtocol
 
 var DownloadQueue []*FileDownloadHanlde
+var UploadQueue []*FileUploadHandle

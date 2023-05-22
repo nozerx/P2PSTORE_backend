@@ -14,3 +14,7 @@ func GetFileInfo(buff []byte) FileInfo {
 	}
 	return file
 }
+
+func UpdatePieceUploadStatus(stat bool) {
+
+}

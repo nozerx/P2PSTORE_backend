@@ -35,6 +35,7 @@ func (fI *FileInfo) SplitAndSave(file *os.File) {
 				pieceFile.Close()
 				pieceInfo := ComposePieceInfo(pieceFileName, lastPieceSize, fI.FileName, fI.FileType, fI.UniqueID)
 				pieceInfo.AddSources()
+				pieceInfo.InitPieceUploadStatus()
 				fI.AppendPiecesMapList(pieceInfo)
 				fmt.Println("Handled file ", pieceFileName)
 				// fmt.Println(pieceInfo)
@@ -50,6 +51,7 @@ func (fI *FileInfo) SplitAndSave(file *os.File) {
 				pieceFile.Close()
 				pieceInfo := ComposePieceInfo(pieceFileName, BufferSize, fI.FileName, fI.FileType, fI.UniqueID)
 				pieceInfo.AddSources()
+				pieceInfo.InitPieceUploadStatus()
 				fI.AppendPiecesMapList(pieceInfo)
 				fmt.Println("Handled file ", pieceFileName)
 				// fmt.Println(pieceInfo)
@@ -59,4 +61,10 @@ func (fI *FileInfo) SplitAndSave(file *os.File) {
 	}
 	fI.Save()
 
+}
+
+func (p *PieceInfo) InitPieceUploadStatus() {
+	p.Status = []bool{
+		false, false, false,
+	}
 }
