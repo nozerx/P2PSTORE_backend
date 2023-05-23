@@ -23,12 +23,13 @@ type PieceInfo struct {
 }
 
 type FileInfo struct {
-	FileName   string
-	FileType   string
-	FileSize   int
-	FilePieces int
-	UniqueID   uuid.UUID
-	Pieces     []PieceInfo
+	FileName      string
+	FileType      string
+	FileSize      int
+	FilePieces    int
+	UniqueID      uuid.UUID
+	Pieces        []PieceInfo
+	PeerTableCopy []peer.ID
 }
 
 type PickDistributionList struct {
@@ -78,6 +79,7 @@ const recievefolder FolderName = "core/recieve"
 
 const FilePieceUploadProtocol string = "rex/file/upload/piece"
 const FilePieceDownloadProtocol string = "rex/file/download/piece"
+const MapFileShareProtocol string = "rex/file/meta/share"
 
 //variables
 

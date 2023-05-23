@@ -14,7 +14,7 @@ import (
 )
 
 var copyofPeerlist []peer.ID
-var peerdistrlist []PickDistributionList = nil
+var peerdistrlist []PickDistributionList = nil // as this variable is a global variable, this may cause some logic problems when trying to sever two simultaneous request
 var previouschoices []peer.ID = nil
 
 func (fn FolderName) MakeFolder() error {
@@ -84,6 +84,7 @@ func ComposePieceInfo(pieceName string, pieceSize int, fileName string, fileType
 func (fI *FileInfo) preparePieceDistributionList() {
 	copyofPeerlist = group.CurrentGroupRoom.PeerList()
 	peerdistrlist = nil
+	fI.PeerTableCopy = copyofPeerlist
 	// count := int(math.Ceil(float64(fI.FilePieces/len(copyofPeerlist)))) * 2
 	count := int(math.Ceil((float64(fI.FilePieces*3))/float64(len(copyofPeerlist)))) + 2
 	fmt.Println("Count = ", count)
@@ -158,5 +159,5 @@ func (fI *FileInfo) Save() {
 	file.Close()
 	fmt.Println("[SUCCESS] - in saving the map file for [" + fI.FileName + "]")
 	fI.Send()
-
+	fI.UploadTimeOut(60)
 }

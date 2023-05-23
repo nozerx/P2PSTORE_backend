@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/libp2p/go-libp2p/core/network"
+	"github.com/libp2p/go-libp2p/core/peer"
 	"github.com/libp2p/go-libp2p/core/protocol"
 )
 
@@ -180,4 +181,12 @@ func CheckUploadStatus(file *FileInfo) {
 			return
 		}
 	}
+}
+
+func (fl FileInfo) UploadTimeOut(timeOut int) {
+	time.Sleep(time.Second * time.Duration(timeOut))
+	fl.SendMapFile(peer.ID(fmt.Sprint("nil")))
+	// for {
+
+	// }
 }

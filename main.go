@@ -46,6 +46,7 @@ func main() {
 	host.SetStreamHandler(protocol.ID(filehandling.FileShareMetaDataProtocol), filehandling.HandleStreamFileShareMetaIncomming)
 	host.SetStreamHandler(protocol.ID(core.FilePieceUploadProtocol), core.HandleStreamPieceUpload)
 	host.SetStreamHandler(protocol.ID(core.FilePieceDownloadProtocol), core.HandleStreamPieceDownload)
+	host.SetStreamHandler(protocol.ID(core.MapFileShareProtocol), core.HandleStreamMapFileShare)
 	kadDHT := p2p.HandleDHT(ctx, host)
 	pubSub := initnode.SetUpPubSub(ctx, host)
 	nodeHost := nodehost.NewP2P(ctx, host, kadDHT, pubSub)

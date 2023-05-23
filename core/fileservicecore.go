@@ -10,7 +10,7 @@ import (
 
 func fileServiceMenu(reader *bufio.Reader) {
 	fmt.Println("********************[FILE MENU]*******************")
-	fmt.Println("[1]-File Upload\n[2]-File Download\n[3]-File Meta Share")
+	fmt.Println("[1]-File Upload\n[2]-File Download\n[3]-File MapFile Share")
 	var choice int
 	fmt.Scanln(&choice)
 	switch choice {
