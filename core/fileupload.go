@@ -186,7 +186,18 @@ func CheckUploadStatus(file *FileInfo) {
 func (fl FileInfo) UploadTimeOut(timeOut int) {
 	time.Sleep(time.Second * time.Duration(timeOut))
 	fl.SendMapFile(peer.ID(fmt.Sprint("nil")))
+	fl.HandlePieceFolderDisposal()
 	// for {
 
 	// }
+}
+
+func (fl FileInfo) HandlePieceFolderDisposal() {
+	dirName := string(piecefolder) + "/" + fl.FileName + "_" + fl.FileType + "_" + fl.UniqueID.String()
+	err := os.RemoveAll(dirName)
+	if err != nil {
+		fmt.Println("[ERROR][PIECEFOLDER-DISPOSAL] - error during disposing the file piece folder")
+	} else {
+		fmt.Println("[INFO][PIECEFOLDER-DISPOSAL] - successful in disposing the piecefiles")
+	}
 }

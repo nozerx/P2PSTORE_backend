@@ -41,7 +41,6 @@ func sendTo(file *os.File, remotePeer peer.ID, buffer []byte) {
 	if err != nil {
 		fmt.Println("[ERROR][MAPFILE-SHARE] - during establishing a stream to peer [" + remotePeer.Pretty() + "]")
 	} else {
-
 		_, err := str.Write(buffer)
 		if err != nil {
 			fmt.Println("[ERROR][MAPFILE-SHARE] - during writing to stream")
